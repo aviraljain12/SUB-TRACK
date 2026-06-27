@@ -202,11 +202,11 @@ Password: password123
 
 ## What I Want to Add Next
 
-- [ ] Email reminders before renewal date (Nodemailer)
-- [ ] Real payment gateway integration (Razorpay — it's India-focused and free to test)
-- [ ] Deploy on Render or Railway
-- [ ] Mobile responsive design improvements
-- [ ] Export all invoices as a single PDF report
+- Email reminders before renewal date (Nodemailer)
+- Real payment gateway integration (Razorpay — it's India-focused and free to test)
+- Deploy on Render or Railway
+- Mobile responsive design improvements
+- Export all invoices as a single PDF report
 
 ## Final Note
 
