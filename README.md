@@ -1,6 +1,6 @@
 # SUB-TRACK — My First Full-Stack Project 
 
-A subscription tracker I built as a fresher to solve a real problem I was facing — and to finally understand how a full-stack app actually works end to end.
+A subscription management system a real problem I was facing — and to finally understand how a full-stack app actually works.
 
 
 ## Note:
