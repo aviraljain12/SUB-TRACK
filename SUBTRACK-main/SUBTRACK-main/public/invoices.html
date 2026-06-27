@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Invoices - SUB-TRACK</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="js/theme.js"></script>
+</head>
+<body>
+  <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">
+      <i class="fas fa-moon"></i>
+  </button>
+  <div class="container">
+    <h2>Past Invoices</h2>
+    <ul id="invoiceList"></ul>
+  </div>
+  <script>
+    const token = localStorage.getItem('token');
+    fetch("http://localhost:5000/api/invoices", {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById("invoiceList");
+        data.forEach(inv => {
+          const item = document.createElement("li");
+          item.innerHTML = `
+            ${inv.plan_name} - ₹${inv.paid_amount} on ${new Date(inv.payment_date).toLocaleDateString()}
+            <a href="http://localhost:5000/api/download-invoice/${inv.payment_id}" target="_blank">Download</a>
+          `;
+          list.appendChild(item);
+        });
+      });
+  </script>
+</body>
+</html>

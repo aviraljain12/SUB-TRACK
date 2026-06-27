@@ -1,0 +1,26 @@
+# Node modules - never commit these
+node_modules/
+npm-debug.log*
+
+# SQLite database file (runtime data, not source code)
+*.db
+*.sqlite
+backend/data/
+
+# Generated PDF invoices (runtime output)
+backend/*.pdf
+
+# Environment variables
+.env
+.env.local
+
+# Portable Node.js runtime (not source code)
+.node/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "subtrack",
+  "version": "1.0.0",
+  "description": "Subscription tracking application",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Invoice - SUB-TRACK</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            color: #333333;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+        .header-table td {
+            vertical-align: top;
+        }
+        .brand-logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: #2b6cb0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .brand-subtitle {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 4px;
+        }
+        .invoice-title {
+            text-align: right;
+            font-size: 32px;
+            font-weight: 300;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .meta-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        .meta-table td {
+            width: 50%;
+            vertical-align: top;
+            padding: 10px 0;
+        }
+        .section-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #718096;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        .details-text {
+            font-size: 14px;
+            color: #4a5568;
+        }
+        .details-text p {
+            margin: 4px 0;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        .items-table th {
+            background-color: #f7fafc;
+            color: #4a5568;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid #edf2f7;
+        }
+        .items-table td {
+            padding: 16px 12px;
+            font-size: 14px;
+            color: #4a5568;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .totals-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .totals-table td {
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+        .totals-table .label {
+            text-align: right;
+            color: #718096;
+            width: 80%;
+        }
+        .totals-table .val {
+            text-align: right;
+            font-weight: 600;
+            color: #2d3748;
+            width: 20%;
+        }
+        .totals-table .grand-total {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2b6cb0;
+            border-top: 2px solid #edf2f7;
+            padding-top: 16px;
+        }
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            font-size: 12px;
+            color: #a0aec0;
+            border-top: 1px solid #edf2f7;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-box">
+        <table class="header-table">
+            <tr>
+                <td>
+                    <div class="brand-logo">SUB-TRACK</div>
+                    <div class="brand-subtitle">Your Personal Subscription Manager</div>
+                </td>
+                <td>
+                    <div class="invoice-title">Invoice</div>
+                </td>
+            </tr>
+        </table>
+
+        <table class="meta-table">
+            <tr>
+                <td>
+                    <div class="section-title">Billed To</div>
+                    <div class="details-text">
+                        <p><strong><%= user_name %></strong></p>
+                        <p><%= email %></p>
+                    </div>
+                </td>
+                <td style="text-align: right;">
+                    <div class="section-title" style="text-align: right;">Invoice Details</div>
+                    <div class="details-text">
+                        <p><strong>Date:</strong> <%= new Date(payment_date).toLocaleDateString() %></p>
+                        <p><strong>Status:</strong> <span style="color: #38a169; font-weight: 700;"><%= status %></span></p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>Service Description</th>
+                    <th>Plan</th>
+                    <th style="text-align: right;">Billing Period</th>
+                    <th style="text-align: right;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong><%= service.charAt(0).toUpperCase() + service.slice(1) %> Subscription</strong></td>
+                    <td><%= plan %></td>
+                    <td style="text-align: right;">1 Month</td>
+                    <td style="text-align: right;">₹<%= (amount / 1.18).toFixed(2) %></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="totals-table">
+            <tr>
+                <td class="label">Subtotal (Excl. GST):</td>
+                <td class="val">₹<%= (amount / 1.18).toFixed(2) %></td>
+            </tr>
+            <tr>
+                <td class="label">GST (18%):</td>
+                <td class="val">₹<%= (amount - (amount / 1.18)).toFixed(2) %></td>
+            </tr>
+            <tr>
+                <td class="label grand-total">Grand Total (Incl. GST):</td>
+                <td class="val grand-total">₹<%= parseFloat(amount).toFixed(2) %></td>
+            </tr>
+        </table>
+
+        <div class="footer">
+            Thank you for using SUB-TRACK. If you have any questions, feel free to contact support.
+        </div>
+    </div>
+</body>
+</html>

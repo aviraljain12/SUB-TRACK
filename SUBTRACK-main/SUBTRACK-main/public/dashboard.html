@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUB-TRACK - Dashboard</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/theme.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <h1 class="title">SUB-TRACK</h1>
+            <div class="user-info">
+                <p id="userName">Welcome, User</p>
+                <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">
+                    <i class="fas fa-moon"></i> Theme Toggle
+                </button>
+                <button id="logoutBtn">Logout</button>
+            </div>
+        </nav>
+        <main class="main-content">
+            <h2>Available Subscriptions</h2>
+            <div class="subscription-grid" id="subscriptionGrid">
+                <!-- Service cards will be added here by JavaScript -->
+            </div>
+            
+            <h2>Your Active Subscriptions</h2>
+            <div class="subscription-grid" id="activeSubscriptions">
+                <!-- Active subscriptions will be added here -->
+            </div>
+
+            <div class="recent-invoices">
+                <h2>Recent Invoices</h2>
+                <div id="invoicesList">
+                    <!-- Invoices will be added here -->
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/config.js"></script>
+    <script src="js/services-config.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html> 
