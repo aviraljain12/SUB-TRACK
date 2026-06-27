@@ -1,6 +1,6 @@
 # SUB-TRACK — My First Full-Stack Project 
 
-> A subscription tracker I built as a fresher to solve a real problem I was facing — and to finally understand how a full-stack app actually works end to end.
+A subscription tracker I built as a fresher to solve a real problem I was facing — and to finally understand how a full-stack app actually works end to end.
 
 
 ## The Idea — Why I Built This
@@ -39,7 +39,7 @@ I kept it simple — no heavy frameworks, just things I was comfortable with:
 | PDF | html-pdf (EJS template → PDF) |
 
 
-## 🗄️ Database Design (SQLite)
+## Database Design (SQLite)
 
 One thing I actually spent a lot of time on was designing the database properly. I learned about **normalization** and applied it here.
 
@@ -90,7 +90,7 @@ I normalized the schema to **3NF** — every column depends only on the primary 
 
 ---
 
-## 🚧 Problems I Faced (And How I Solved Them)
+## Problems I Faced (And How I Solved Them)
 
 ### 1. "Why is my login not working?!" — The Duplicate ID Bug
 
