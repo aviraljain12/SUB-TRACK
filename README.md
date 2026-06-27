@@ -88,7 +88,6 @@ USERS  ──────< SUBSCRIPTIONS
 
 I normalized the schema to **3NF** — every column depends only on the primary key, not on other non-key columns. This was something my professor had explained but I truly understood it only when I had to design this myself.
 
----
 
 ## Problems I Faced (And How I Solved Them)
 
@@ -160,12 +159,11 @@ I'm honest about what this project doesn't do:
 
 I won't pretend I figured everything out on my own:
 
-- **YouTube** — Traversy Media's Node.js + Express crash course was where I started
-- **Stack Overflow** — Genuinely, for almost every bug above
-- **MDN Web Docs** — For understanding fetch API, URLSearchParams, localStorage
-- **ChatGPT / AI tools** — Used them to understand concepts faster and debug specific errors (like the JWT token in URL query parameter fix)
-- **bcryptjs docs** — For understanding how password hashing actually works
-- **My college notes** — For the normalization theory (1NF, 2NF, 3NF)
+- **YouTube** — Traversy Media's Node.js + Express crash course was where I started .
+- **Stack Overflow** — Genuinely, for almost every bug above .
+- **MDN Web Docs** — For understanding fetch API .
+- **ChatGPT / AI tools** — Used them to understand concepts faster and debug specific errors (like the JWT token in URL query parameter fix) .
+- **My college notes** — For the normalization theory (1NF, 2NF, 3NF) .
 
 
 ## How to Run This Locally
