@@ -1,136 +1,213 @@
-# SUB-TRACK: Subscription & Billing Manager
+# SUB-TRACK — My First Full-Stack Project 
 
-A lightweight, premium full-stack subscription tracking application designed to help users manage, monitor, and optimize their monthly recurring payments (such as Netflix, Spotify, Amazon Prime, etc.). 
+> A subscription tracker I built as a fresher to solve a real problem I was facing — and to finally understand how a full-stack app actually works end to end.
 
-This project was built from scratch to demonstrate full-stack development capability, database design, secure token-based authentication, and dynamic user interface flows.
 
----
+## The Idea — Why I Built This
 
-## 🚀 Key Features
+I noticed something embarrassing. I was paying for **Netflix, Spotify, and Amazon Prime simultaneously** — and I had no clue two of them were on auto-renewal. I found out only when my bank balance dropped unexpectedly.
 
-* **Glassmorphic UI with Light/Dark Mode**: A beautiful, harmonized UI theme that toggles dynamically and persists the selected choice across pages using `localStorage`.
-* **Interactive Authentication tabs**: Standard tab switching (Login / Sign Up) built natively on the main auth page to facilitate quick access.
-* **Smart Subscription Dashboard**: Add, update, view, and cancel subscriptions. Displays calculated base amounts, tax (18% GST), and total costs dynamically.
-* **Invoice Download Engine**: Generates and downloads professional PDF receipts itemizing transaction histories and GST tax breakdowns.
-* **Authentication Security**: Implements secure signups and logins using **Bcrypt** password hashing and **JSON Web Token (JWT)** session states.
+I thought — why not build something that tracks this for me?
 
----
+I know apps like this already exist, but:
+1. I wanted to build something **myself from scratch**
+2. I had recently learned Node.js and Express in theory — I had never built a real project with it
+3. I needed something to put on my resume that wasn't just a to-do list
 
-## 🗄️ Database Design & Normalization
+So I started building **SUB-TRACK** — a web app to track subscriptions, show upcoming renewals, and generate invoices.
 
-The backend utilizes **SQLite** for structured data persistence. To show strong design methodologies, the database has been built using a clean, normalized relational structure:
 
-### Entity Relationship Diagram (ERD)
+## What This App Does
 
-```mermaid
-erDiagram
-    USERS {
-        INTEGER user_id PK
-        TEXT full_name
-        TEXT email_address UK
-        TEXT password_hash
-    }
-    SUBSCRIPTIONS {
-        INTEGER subscription_id PK
-        INTEGER user_id FK
-        TEXT service_name
-        TEXT plan_name
-        REAL billing_amount
-        TEXT subscription_status
-        TEXT start_date
-        TEXT next_renewal_date
-    }
-    PAYMENTS {
-        INTEGER payment_id PK
-        INTEGER user_id FK
-        TEXT service_name
-        TEXT plan_name
-        REAL paid_amount
-        TEXT payment_date
-    }
+- **Login / Sign Up** — users can register and log in securely
+- **Dashboard** — see all your subscriptions in one place, know what you're paying monthly
+- **Subscribe to Plans** — choose from Netflix, Spotify, Amazon Prime, Disney+ plans
+- **Mock Payment Flow** — simulates a checkout (not real money, just a demo of the full flow)
+- **Invoice Generation** — after payment, a PDF invoice is generated and downloadable
+- **Light / Dark Mode** — because I wanted to learn how theming works and it looks great
 
-    USERS ||--o{ SUBSCRIPTIONS : "manages"
-    USERS ||--o{ PAYMENTS : "makes"
+
+## Tech Stack
+
+I kept it simple — no heavy frameworks, just things I was comfortable with:
+
+| Layer | Technology |
+|---|---|
+| Frontend | HTML, CSS, Vanilla JavaScript |
+| Backend | Node.js + Express.js |
+| Database | SQLite3|
+| PDF | html-pdf (EJS template → PDF) |
+
+
+## 🗄️ Database Design (SQLite)
+
+One thing I actually spent a lot of time on was designing the database properly. I learned about **normalization** and applied it here.
+
+### Tables
+
+#### `users`
+Stores who is registered on the app.
+```
+user_id        → Primary Key (auto-increment)
+full_name      → The user's name
+email_address  → Used for login (must be unique)
+password_hash  → Password is NEVER stored as plain text, only the bcrypt hash
 ```
 
-### Table Schemas & Attributes
+#### `subscriptions`
+Tracks which service a user subscribed to.
+```
+subscription_id    → Primary Key
+user_id            → Links to users table (Foreign Key)
+service_name       → e.g. 'netflix', 'spotify'
+plan_name          → e.g. 'premium', 'individual'
+billing_amount     → Base price per month
+subscription_status→ 'active' or 'cancelled'
+start_date         → When they subscribed
+next_renewal_date  → When it auto-renews
+```
 
-#### 1. `users` Table
-Stores authentication details for users.
-- `user_id` (INTEGER, Primary Key, Auto-Increment): Unique identifier.
-- `full_name` (TEXT, Not Null): User's legal name.
-- `email_address` (TEXT, Unique, Indexed): User's email address used as username login.
-- `password_hash` (TEXT, Not Null): Hashed representation of password (via `bcryptjs`).
+#### `payments`
+Every time someone "pays", a payment record is created (which becomes the invoice).
+```
+payment_id    → Primary Key
+user_id       → Links to users table (Foreign Key)
+service_name  → What service was paid for
+plan_name     → Which plan
+paid_amount   → Total amount charged (including 18% GST)
+payment_date  → When payment was made
+```
 
-#### 2. `subscriptions` Table
-Stores details of active or cancelled user subscriptions.
-- `subscription_id` (INTEGER, Primary Key, Auto-Increment): Unique subscription record ID.
-- `user_id` (INTEGER, Foreign Key referencing `users(user_id)`): Associated owner of subscription.
-- `service_name` (TEXT, Not Null): Identifier of the service (e.g., `'netflix'`, `'spotify'`).
-- `plan_name` (TEXT, Not Null): Specific plan level (e.g., `'premium'`, `'super'`).
-- `billing_amount` (REAL, Not Null): Base monthly billing rate.
-- `subscription_status` (TEXT, Default `'active'`): Current status (`'active'` or `'cancelled'`).
-- `start_date` (TEXT, Not Null): ISO timestamp when subscription was bought.
-- `next_renewal_date` (TEXT, Not Null): ISO timestamp of the upcoming renewal invoice.
+### ER Diagram
 
-#### 3. `payments` Table (Invoices)
-Logs transactional billing histories.
-- `payment_id` (INTEGER, Primary Key, Auto-Increment): Unique invoice identifier.
-- `user_id` (INTEGER, Foreign Key referencing `users(user_id)`): Customer reference.
-- `service_name` (TEXT, Not Null): Name of service.
-- `plan_name` (TEXT, Not Null): Plan name.
-- `paid_amount` (REAL, Not Null): Grand total charged.
-- `payment_date` (TEXT, Not Null): ISO timestamp of transaction.
+```
+USERS  ──────< SUBSCRIPTIONS
+  |
+  └──────────< PAYMENTS
+```
 
-### Normalization Levels Met
-
-* **First Normal Form (1NF)**: All columns contain atomic values, and each record has a unique primary key identifier. No repeating groups or multi-value attributes exist.
-* **Second Normal Form (2NF)**: Meets 1NF. Because all tables use single-column surrogate keys (`user_id`, `subscription_id`, `payment_id`), there are no partial functional dependencies. Every non-key column is fully dependent on the primary key.
-* **Third Normal Form (3NF)**: Meets 2NF. There are no transitive functional dependencies (where a non-key column depends on another non-key column). 
-  *Design Note*: In an enterprise app, available services and plans would reside in separate static tables. Because plan rules and pricing are statically configured in frontend logic (`services-config.js`), placing service/plan descriptors on the active subscription row represents the most efficient state layout while maintaining functional constraints.
+I normalized the schema to **3NF** — every column depends only on the primary key, not on other non-key columns. This was something my professor had explained but I truly understood it only when I had to design this myself.
 
 ---
 
-## 🛠️ Technology Stack
+## 🚧 Problems I Faced (And How I Solved Them)
 
-* **Frontend**: HTML5, CSS3, Vanilla JS, Font-Awesome Icons
-* **Backend**: Node.js, Express.js
-* **Database**: SQLite3 (relational engine)
-* **Auth**: JSON Web Tokens (`jsonwebtoken`), Bcrypt password encryption (`bcryptjs`)
-* **Templating & PDF**: EJS templates, PhantomJS-based PDF compiler (`html-pdf`)
+### 1. "Why is my login not working?!" — The Duplicate ID Bug
 
----
+This one wasted almost half a day. My login and signup forms were on the same HTML page and I had given both of them `id="email"` and `id="password"`.
 
-## ⚡ How to Run Locally
+JavaScript's `document.getElementById('email')` was always picking up the **first one on the page**, so signup was reading the login field's value and login was just breaking silently.
+
+**Fix:** I renamed all signup fields to unique IDs — `signupEmail`, `signupPassword`, `signupName`, `signupConfirmPassword`. Lesson learned: **HTML IDs must be unique across the whole page**, not just within a form.
+
+
+### 2. The PDF Download Was Downloading a Text File
+
+When I clicked "Download Invoice", the browser was downloading a file but it was just showing the text `{"error":"No token provided"}` — not a PDF at all.
+
+The problem was that a direct `<a href="/api/download-invoice/1">` link doesn't send the Authorization header that my backend was checking. So the server rejected the request and sent back an error JSON — which the browser saved as a file.
+
+**Fix:** I updated the backend to also accept the JWT token as a URL query parameter (`?token=...`), and updated all download links to include the token in the URL. Now `window.open('/api/download-invoice/1?token=eyJ...')` works perfectly and the browser downloads a real PDF.
+
+
+### 3. Passwords Were Being Stored as Plain Text (Early Version)
+
+In my first version, I literally stored `password: req.body.password` directly in the database. I didn't think about it much until I watched a YouTube video on web security and realized this is one of the worst things you can do.
+
+**Fix:** I added `bcryptjs`. Now during signup, the password gets hashed before saving:
+```js
+const passwordHash = await bcrypt.hash(password, 10);
+```
+And during login, it compares the entered password with the stored hash:
+```js
+const isValid = await bcrypt.compare(password, user.password_hash);
+```
+The actual password is never stored anywhere.
+
+
+### 4. Sessions Were Being Lost on Page Refresh
+
+After login, navigating to another page would log the user out. I was storing the token in a variable, which gets cleared when the page reloads.
+
+**Fix:** I switched to `localStorage.setItem('token', token)` after login. Now the token survives page reloads and the user stays logged in across pages. On logout, I call `localStorage.removeItem('token')`.
+
+
+### 5. Node.js Wasn't Installed on My System Globally
+
+I was working on this project on a college laptop where I don't have admin rights to install software. npm install was failing.
+
+**Fix:** I downloaded a **portable version of Node.js** (just a zip, no installation needed) and placed it in the project folder. I then set the PATH to point to this folder before running commands. This taught me how PATH environment variables work, which I had never understood before.
+
+
+### 6. Invoice PDF Had ₹ Showing as "$null"
+
+The payment success page was showing the amount as `$null` because I was reading a URL parameter that didn't exist. The redirect URL from the payment page wasn't including the amount.
+
+**Fix:** I fixed the redirect to include `?amount=${amount}&invoiceId=${id}` and then on the success page read `new URLSearchParams(window.location.search).get('amount')`. Simple fix, but it took me a while to figure out where the value was getting lost.
+
+
+## Limitations I Know About
+
+I'm honest about what this project doesn't do:
+
+- **No real payments** — The payment form is a mockup. It doesn't connect to Razorpay or Stripe. I wanted to show the full user flow (checkout → success → invoice) but didn't want to deal with real money handling for a demo project.
+- **Single user environment** — The app works fine for one user at a time. I haven't tested it for concurrent users heavily.
+- **No email notifications** — I wanted to add renewal reminders via email (using Nodemailer) but ran out of time. It's on my to-do list.
+- **No deployment** — The app runs locally. I looked into deploying on Railway or Render but the SQLite file path handling gets complicated on cloud servers. I'll tackle this next.
+- **No input sanitization against SQL injection** — I'm using parameterized queries which helps, but I haven't done a full security audit.
+
+## Resources That Helped Me
+
+I won't pretend I figured everything out on my own:
+
+- **YouTube** — Traversy Media's Node.js + Express crash course was where I started
+- **Stack Overflow** — Genuinely, for almost every bug above
+- **MDN Web Docs** — For understanding fetch API, URLSearchParams, localStorage
+- **ChatGPT / AI tools** — Used them to understand concepts faster and debug specific errors (like the JWT token in URL query parameter fix)
+- **bcryptjs docs** — For understanding how password hashing actually works
+- **My college notes** — For the normalization theory (1NF, 2NF, 3NF)
+
+
+## How to Run This Locally
 
 ### Prerequisites
-Make sure you have [Node.js](https://nodejs.org) installed on your system.
+- [Node.js](https://nodejs.org) installed on your machine
 
 ### Steps
 
-1. Navigate to the inner project directory:
-   ```bash
-   cd SUBTRACK-main/SUBTRACK-main
-   ```
+```bash
+# 1. Clone the repo
+git clone https://github.com/aviraljain12/SUB-TRACK.git
+cd SUB-TRACK/SUBTRACK-main/SUBTRACK-main
 
-2. Go to the `backend` folder and install packages:
-   ```bash
-   cd backend
-   npm install
-   ```
+# 2. Install backend dependencies
+cd backend
+npm install
 
-3. Start the Express backend server:
-   ```bash
-   npm start
-   ```
+# 3. Start the server
+npm start
 
-4. Open your browser and navigate to:
-   `http://localhost:5000`
+# 4. Open your browser
+# Go to http://localhost:5000
+```
 
----
+### Default Login (for testing)
+```
+Email:    dev@test.com
+Password: password123
+```
+*(This account is auto-created when the server starts for the first time)*
 
-## 🔒 Security Practices Demonstrated
-- **Password Protection**: Passwords are never stored in raw text. They are hashed using a 10-round salt hash via `bcrypt` during registration.
-- **Stateless Session Management**: Login issues a cryptographically signed JSON Web Token (JWT). API routes require validation of this token via custom middleware (`verifyToken`).
-- **Endpoint Route Isolation**: Static frontend assets are hosted via `/`, while all functional database access occurs on separated API pathways under `/api/*`.
+## What I Want to Add Next
 
+- [ ] Email reminders before renewal date (Nodemailer)
+- [ ] Real payment gateway integration (Razorpay — it's India-focused and free to test)
+- [ ] Deploy on Render or Railway
+- [ ] Mobile responsive design improvements
+- [ ] Export all invoices as a single PDF report
+
+## Final Note
+
+This was my first time building something end-to-end — from the database schema to the frontend UI to the PDF generation. There are definitely things I'd do differently if I started over (like cloning the repo properly before pushing 😅), but I learned more from the bugs than from anything I read.
+
+If you're a recruiter reading this — I built this because I genuinely wanted to. The code isn't perfect but it works, and I understand every line of it.
