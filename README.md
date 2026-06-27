@@ -3,6 +3,10 @@
 A subscription tracker I built as a fresher to solve a real problem I was facing — and to finally understand how a full-stack app actually works end to end.
 
 
+## Note:
+This repo has been updated since it was first pushed. The earlier version was simpler and had a few issues — this is the improved version with a better UI, proper authentication, a normalized database schema, and working invoice downloads
+
+
 ## The Idea — Why I Built This
 
 I noticed something embarrassing. I was paying for **Netflix, Spotify, and Amazon Prime simultaneously** — and I had no clue two of them were on auto-renewal. I found out only when my bank balance dropped unexpectedly.
@@ -206,6 +210,4 @@ Password: password123
 
 ## Final Note
 
-This was my first time building something end-to-end — from the database schema to the frontend UI to the PDF generation. There are definitely things I'd do differently if I started over (like cloning the repo properly before pushing 😅), but I learned more from the bugs than from anything I read.
-
-If you're a recruiter reading this — I built this because I genuinely wanted to. The code isn't perfect but it works, and I understand every line of it.
+This was my first time building something end-to-end — from the database schema to the frontend UI to the PDF generation. There are definitely things I'd do differently if I started over (like cloning the repo properly before pushing ), but I learned more from the bugs than from anything I read.
